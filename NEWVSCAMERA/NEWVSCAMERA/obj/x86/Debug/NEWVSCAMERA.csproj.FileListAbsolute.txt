@@ -1,0 +1,25 @@
+C:\Users\James\Desktop\AForge.Net\NEWVSCAMERA\NEWVSCAMERA\bin\Debug\NEWVSCAMERA.exe
+C:\Users\James\Desktop\AForge.Net\NEWVSCAMERA\NEWVSCAMERA\bin\Debug\NEWVSCAMERA.pdb
+C:\Users\James\Desktop\AForge.Net\NEWVSCAMERA\NEWVSCAMERA\bin\Debug\AForge.DebuggerVisualizers (2010).dll
+C:\Users\James\Desktop\AForge.Net\NEWVSCAMERA\NEWVSCAMERA\bin\Debug\AForge.dll
+C:\Users\James\Desktop\AForge.Net\NEWVSCAMERA\NEWVSCAMERA\bin\Debug\AForge.Imaging.dll
+C:\Users\James\Desktop\AForge.Net\NEWVSCAMERA\NEWVSCAMERA\bin\Debug\AForge.Video.DirectShow.dll
+C:\Users\James\Desktop\AForge.Net\NEWVSCAMERA\NEWVSCAMERA\bin\Debug\AForge.Video.dll
+C:\Users\James\Desktop\AForge.Net\NEWVSCAMERA\NEWVSCAMERA\bin\Debug\AForge.Math.dll
+C:\Users\James\Desktop\AForge.Net\NEWVSCAMERA\NEWVSCAMERA\bin\Debug\AForge.Controls.dll
+C:\Users\James\Desktop\AForge.Net\NEWVSCAMERA\NEWVSCAMERA\bin\Debug\AForge.xml
+C:\Users\James\Desktop\AForge.Net\NEWVSCAMERA\NEWVSCAMERA\bin\Debug\AForge.Imaging.xml
+C:\Users\James\Desktop\AForge.Net\NEWVSCAMERA\NEWVSCAMERA\bin\Debug\AForge.Video.xml
+C:\Users\James\Desktop\AForge.Net\NEWVSCAMERA\NEWVSCAMERA\bin\Debug\AForge.Video.DirectShow.xml
+C:\Users\James\Desktop\AForge.Net\NEWVSCAMERA\NEWVSCAMERA\bin\Debug\AForge.Math.xml
+C:\Users\James\Desktop\AForge.Net\NEWVSCAMERA\NEWVSCAMERA\bin\Debug\AForge.Controls.xml
+C:\Users\James\Desktop\AForge.Net\NEWVSCAMERA\NEWVSCAMERA\obj\x86\Debug\NEWVSCAMERA.csprojResolveAssemblyReference.cache
+C:\Users\James\Desktop\AForge.Net\NEWVSCAMERA\NEWVSCAMERA\obj\x86\Debug\NEWVSCAMERA.Form1.resources
+C:\Users\James\Desktop\AForge.Net\NEWVSCAMERA\NEWVSCAMERA\obj\x86\Debug\NEWVSCAMERA.Properties.Resources.resources
+C:\Users\James\Desktop\AForge.Net\NEWVSCAMERA\NEWVSCAMERA\obj\x86\Debug\NEWVSCAMERA.csproj.GenerateResource.Cache
+C:\Users\James\Desktop\AForge.Net\NEWVSCAMERA\NEWVSCAMERA\obj\x86\Debug\NEWVSCAMERA.exe
+C:\Users\James\Desktop\AForge.Net\NEWVSCAMERA\NEWVSCAMERA\obj\x86\Debug\NEWVSCAMERA.pdb
+C:\Users\James\Desktop\AForge.Net\NEWVSCAMERA\NEWVSCAMERA\bin\Debug\Microsoft.VisualStudio.Debugger.DataSetVisualizer.dll
+C:\Users\James\Desktop\AForge.Net\NEWVSCAMERA\NEWVSCAMERA\bin\Debug\alglibnet2.dll
+C:\Users\James\Desktop\AForge.Net\NEWVSCAMERA\NEWVSCAMERA\obj\x86\Debug\NEWVSCAMERA.UserControl1.resources
+C:\Users\James\Desktop\AForge.Net\NEWVSCAMERA\NEWVSCAMERA\bin\Debug\NEWVSCAMERA.exe.config
