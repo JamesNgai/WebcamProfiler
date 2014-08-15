@@ -29,9 +29,17 @@ namespace NEWVSCAMERA
             this.chart1.ChartAreas[0].AxisY.MajorGrid.LineWidth = 0;
             this.chart2.ChartAreas[0].AxisX.MajorGrid.LineWidth = 0;
             this.chart2.ChartAreas[0].AxisY.MajorGrid.LineWidth = 0;
+            this.chart3.ChartAreas[0].AxisX.MajorGrid.LineWidth = 0;
+            this.chart3.ChartAreas[0].AxisY.MajorGrid.LineWidth = 0;
             saveToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.S;
             openToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.O;
             exitToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.E;
+            this.chart1.ChartAreas[0].AxisX.Title = "X-axis"; 
+            this.chart1.ChartAreas[0].AxisY.Title = "Brightness across x";
+            this.chart2.ChartAreas[0].AxisX.Title = "Y-axis";
+            this.chart2.ChartAreas[0].AxisY.Title = "Brightness across y";
+            this.chart3.ChartAreas[0].AxisX.Title = "Z position";
+            this.chart3.ChartAreas[0].AxisY.Title = "Waist Position";
         }
         #region
         private FilterInfoCollection CaptureDevice;
@@ -202,6 +210,24 @@ namespace NEWVSCAMERA
 
             plotGaussianX();
             plotGaussianY();
+            if (textBox6.Text != "")
+            {
+                try
+                {
+                    label13.Text = (plotGaussianX() * Double.Parse(textBox6.Text)).ToString();
+                    label14.Text = (plotGaussianY() * Double.Parse(textBox6.Text)).ToString();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Please type integers only e.g. 500000");
+                }
+            }
+            else
+            {
+                label13.Text = plotGaussianX().ToString("G3");
+                label14.Text = plotGaussianY().ToString("G3");
+            }
+
         }
 
 
@@ -228,12 +254,6 @@ namespace NEWVSCAMERA
 
         }
 
-
-        //private void pictureBox2_MouseMove(object sender, MouseEventArgs e)
-        //{
-        //    label1.Text = "X coor = " + e.X * 1.509;
-        //    label2.Text = "Y coor = " + e.Y * 1.551;
-        //}
 
         private void ApplyFilter(IFilter filter)
         {
@@ -266,110 +286,91 @@ namespace NEWVSCAMERA
             }
         }
 
-        private void plotGaussianY()
+        private double plotGaussianY()
         {
-            if (HelperClass.brightest_y != 0 && HelperClass.brightest_x != 0)
+            double[] GuessParameterArray = new double[4];
+            GaussianFit fit = new GaussianFit();
+            int m = 0;
+            int yrange;
+            SetDefault(out yrange);
+            double[] arrayY = new double[yrange + 1];
+            double[] arrayB = new double[yrange + 1];
+
+
+            double brightness = 0;
+            int ystart = HelperClass.brightest_y - yrange / 2;
+            int yend = HelperClass.brightest_y + yrange / 2;
+            Bitmap mybitmap = new Bitmap(ImagePanel.Image);
+            //Feeding in array X and array Y data points (Y: brightness)
+            for (int i = ystart; i <= yend; i++)
             {
-                double[] GuessParameterArray = new double[4];
-                GaussianFit fit = new GaussianFit();
-                int m = 0;
-                int yrange;
-                SetDefault(out yrange);
-                double[] arrayY = new double[yrange + 1];
-                double[] arrayB = new double[yrange + 1];
-
-
-                double brightness = 0;
-                int ystart = HelperClass.brightest_y - yrange / 2;
-                int yend = HelperClass.brightest_y + yrange / 2;
-                Bitmap mybitmap = new Bitmap(ImagePanel.Image);
-                //Feeding in array X and array Y data points (Y: brightness)
-                for (int i = ystart; i <= yend; i++)
-                {
-                    Color pixel = mybitmap.GetPixel(HelperClass.brightest_x, i);
-                    brightness = (double)pixel.B * 0.33 + pixel.G * 0.33 + pixel.R * (1 - 0.33 * 2);
-                    arrayY[m] = i;
-                    arrayB[m] = brightness;
-                    m++;
-                }
-
-                double[] arrayparameters = new double[4];
-                GuessParameterArray = fit.SuggestParameters(arrayY, arrayB);
-                arrayparameters[0] = GuessParameterArray[0];
-                arrayparameters[1] = GuessParameterArray[1];
-                arrayparameters[2] = GuessParameterArray[2];
-                arrayparameters[3] = GuessParameterArray[3];
-
-                fit.Fit(arrayY, arrayB, arrayparameters);
-                double[] fittedB = fit.FittedValues;
-                //Y HERE REFERS TO BRIGHTNESS
-                for (int j = 0; j < m; j++)
-                {
-                    PlotXYAppend(this.chart2, this.chart2.Series[0], arrayY[j], fittedB[j]);
-                    PlotXYAppend(this.chart2, this.chart2.Series[1], arrayY[j], arrayB[j]);
-
-                }
+                Color pixel = mybitmap.GetPixel(HelperClass.brightest_x, i);
+                brightness = (double)pixel.B * 0.33 + pixel.G * 0.33 + pixel.R * (1 - 0.33 * 2);
+                arrayY[m] = i;
+                arrayB[m] = brightness;
+                m++;
             }
-            else
+
+            double[] arrayparameters = new double[4];
+            GuessParameterArray = fit.SuggestParameters(arrayY, arrayB);
+            arrayparameters[0] = GuessParameterArray[0];
+            arrayparameters[1] = GuessParameterArray[1];
+            arrayparameters[2] = GuessParameterArray[2];
+            arrayparameters[3] = GuessParameterArray[3];
+
+            fit.Fit(arrayY, arrayB, arrayparameters);
+            double[] fittedB = fit.FittedValues;
+
+            for (int j = 0; j < m; j++)
             {
-                MessageBox.Show("Press the brightest point first.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                PlotXYAppend(this.chart2, this.chart2.Series[0], arrayY[j], fittedB[j]);
+                PlotXYAppend(this.chart2, this.chart2.Series[1], arrayY[j], arrayB[j]);
             }
+            return fit.FittedParameters[3];
         }
-    
-
-
-
-        private void plotGaussianX()
+            
+        private double plotGaussianX()
         {
-            if (HelperClass.brightest_x != 0 && HelperClass.brightest_y != 0)
+            double[] GuessParameterArray = new double[4];
+            GaussianFit fit = new GaussianFit();
+            int m = 0;
+            int xrange;
+            SetDefault(out xrange);
+            double[] arrayX = new double[xrange + 1];
+            double[] arrayB = new double[xrange + 1];
+
+
+            double brightness = 0;
+            int xstart = HelperClass.brightest_x - xrange / 2;
+            int xend = HelperClass.brightest_x + xrange / 2;
+            Bitmap mybitmap = new Bitmap(ImagePanel.Image);
+            //Feeding in array X and array Y data points (Y: brightness)
+            for (int i = xstart; i <= xend; i++)
             {
-                double[] GuessParameterArray = new double[4];
-                GaussianFit fit = new GaussianFit();
-                int m = 0;
-                int xrange;
-                SetDefault(out xrange);
-                double[] arrayX = new double[xrange + 1];
-                double[] arrayB = new double[xrange + 1];
-
-
-                double brightness = 0;
-                int xstart = HelperClass.brightest_x - xrange / 2;
-                int xend = HelperClass.brightest_x + xrange / 2;
-                Bitmap mybitmap = new Bitmap(ImagePanel.Image);
-                //Feeding in array X and array Y data points (Y: brightness)
-                for (int i = xstart; i <= xend; i++)
-                {
-                    Color pixel = mybitmap.GetPixel(i, HelperClass.brightest_y);
-                    brightness = (double)pixel.B * 0.33 + pixel.G * 0.33 + pixel.R * (1 - 0.33 * 2);
-                    arrayX[m] = i;
-                    arrayB[m] = brightness;
-                    m++;
-                }
-
-                double[] arrayparameters = new double[4];
-                GuessParameterArray = fit.SuggestParameters(arrayX, arrayB);
-                arrayparameters[0] = GuessParameterArray[0];
-                arrayparameters[1] = GuessParameterArray[1];
-                arrayparameters[2] = GuessParameterArray[2];
-                arrayparameters[3] = GuessParameterArray[3];
-
-                fit.Fit(arrayX, arrayB, arrayparameters);
-                double[] fittedY = fit.FittedValues;
-                //Y HERE REFERS TO BRIGHTNESS
-                for (int j = 0; j < m; j++)
-                {
-                    PlotXYAppend(this.chart1, this.chart1.Series[0], arrayX[j], fittedY[j]);
-                    PlotXYAppend(this.chart1, this.chart1.Series[1], arrayX[j], arrayB[j]);
-
-                }
-            }
-            else
-            {
-                MessageBox.Show("Press the brightest point first.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Color pixel = mybitmap.GetPixel(i, HelperClass.brightest_y);
+                brightness = (double)pixel.B * 0.33 + pixel.G * 0.33 + pixel.R * (1 - 0.33 * 2);
+                arrayX[m] = i;
+                arrayB[m] = brightness;
+                m++;
             }
 
+            double[] arrayparameters = new double[4];
+            GuessParameterArray = fit.SuggestParameters(arrayX, arrayB);
+            arrayparameters[0] = GuessParameterArray[0];
+            arrayparameters[1] = GuessParameterArray[1];
+            arrayparameters[2] = GuessParameterArray[2];
+            arrayparameters[3] = GuessParameterArray[3];
 
+            fit.Fit(arrayX, arrayB, arrayparameters);
+            double[] fittedY = fit.FittedValues;
+            //Y HERE REFERS TO BRIGHTNESS
+            for (int j = 0; j < m; j++)
+            {
+                PlotXYAppend(this.chart1, this.chart1.Series[0], arrayX[j], fittedY[j]);
+                PlotXYAppend(this.chart1, this.chart1.Series[1], arrayX[j], arrayB[j]);
 
+            }
+            return fit.FittedParameters[3];
         }
         private void SetDefault(out int xrange)
         {
@@ -494,7 +495,7 @@ namespace NEWVSCAMERA
             double[] waistarray = waistlist.ToArray();
             for (int m = 0; m <= 20; m++)
             {
-                PlotXYAppend(this.chart1, this.chart1.Series[0], Zarray[m], waistlist[m]);
+                PlotXYAppend(this.chart3, this.chart3.Series[0], Zarray[m], waistlist[m]);
             }
         }
 
@@ -509,6 +510,7 @@ namespace NEWVSCAMERA
                 series.Points.Clear();
             }
         }
+
 
     }
 }
@@ -553,6 +555,7 @@ public class GaussianFit
             model(parameters, xValueArr, ref yValue, null);
             fittedValues[i] = yValue;
         }
+        lastFittedParameters = parameters;
     }
 
     protected void gaussian(double[] parameters, double[] x, ref double func, object obj)
@@ -560,11 +563,11 @@ public class GaussianFit
         double n = parameters[0];//y-shift
         double q = parameters[1];//prefactor of the Gaussian
         double c = parameters[2];//mean
-        double w = parameters[3];//sigma
+        double w = parameters[3];//waist
 
 
         if (w == 0) w = 0.001; // watch out for divide by zero
-        func = n + q * Math.Exp(-Math.Pow(x[0] - c, 2) / ((2 / 5.52) * Math.Pow(w, 2))); 
+        func = n + q * Math.Exp(-(2*Math.Pow(x[0] - c, 2)) / Math.Pow(w, 2)); 
     }
 
     // This returns the y-values for the model at the x-data points it was evaluated at.
@@ -573,6 +576,14 @@ public class GaussianFit
         get
         {
             return fittedValues; 
+        }
+    }
+
+    public double[] FittedParameters
+    {
+        get
+        {
+            return lastFittedParameters;
         }
     }
 
